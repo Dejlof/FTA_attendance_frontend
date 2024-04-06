@@ -12,7 +12,8 @@ import { BiExit } from "react-icons/bi";
 
 const Sidebar = () => {
   return (
-    <div className='bg-white min-h-screen text-center flex flex-col items-center py-10 text-[#8A8A8A] w-44'  style={{ fontSize: '11px' }}>
+    <div className=' text-[#8A8A8A] basis-1/5'  style={{ fontSize: '11px' }}>
+      <div className='w-52 bg-white min-h-full text-center flex flex-col items-center py-10'>
       <img className='w-10 h-12 mb-10' src={FBNLogo} alt="First Bank" />
       <ul>
         <SideBarButton word={'Overview'} icon={<FaHouse/>}/>
@@ -26,6 +27,7 @@ const Sidebar = () => {
       <p  style={{ fontSize: '12px' }} className='text-[#181818] pt-2 pb-3'>Create <br/> Notice</p>
       <button className='bg-[#003B65] text-white px-5 py-1 mb-10'>Create</button>
       <SideBarButton word={'Exit'} icon={<BiExit/>}/>
+      </div>
     </div>
   )
 }
