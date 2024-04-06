@@ -12,7 +12,7 @@ import { BiExit } from "react-icons/bi";
 
 const Sidebar = () => {
   return (
-    <div className=' text-[#8A8A8A] basis-1/5'  style={{ fontSize: '11px' }}>
+    <div className=' text-[#8A8A8A] basis-1/5'  style={{ fontSize: '0.8em' }}>
       <div className='w-52 bg-white min-h-full text-center flex flex-col items-center py-10'>
       <img className='w-10 h-12 mb-10' src={FBNLogo} alt="First Bank" />
       <ul>
