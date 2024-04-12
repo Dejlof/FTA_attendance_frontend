@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "./components/Sidebar";
 import AttendanceList from "./pages/AttendanceList";
 import { Route, Routes } from "react-router-dom";
+import Overview from "./pages/Overview";
 
 function App() {
    return (
@@ -11,6 +12,7 @@ function App() {
       >
          <Sidebar />
          <Routes>
+            <Route path="" element={<Overview />} />
             <Route path="delegates" element={<AttendanceList />} />
          </Routes>
       </div>

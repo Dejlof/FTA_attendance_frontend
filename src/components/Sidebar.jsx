@@ -17,7 +17,6 @@ const Sidebar = () => {
       <div className='w-52 bg-white min-h-full text-center flex flex-col items-center py-10'>
       <img className='w-10 h-12 mb-10' src={FBNLogo} alt="First Bank" />
       <ul>
-        {/* <NavLink to='' end></NavLink> */}
         <NavLink to=''>
           <SideBarButton word={'Overview'} icon={<FaHouse/>}/> 
         </NavLink>
