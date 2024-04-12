@@ -2,6 +2,8 @@ import React from "react";
 import SearchHeader from "../components/SearchHeader";
 import WelcomeMessage from "../components/WelcomeMessage";
 import OverviewCard from "../components/OverviewCard";
+import AttendanceChart from "../components/AttendanceChart";
+import Calendar from "../components/Calendar";
 
 const Overview = () => {
    return (
@@ -13,6 +15,10 @@ const Overview = () => {
             <OverviewCard title={'Delegates Present'} number={152} />
             <OverviewCard title={'Delegates Absent'} number={'04'} />
             <OverviewCard title={'Late Delegates'} number={'08'} />
+         </div>
+         <div className="flex flex-wrap gap-4 items-center justify-between mt-8">
+            <AttendanceChart  />
+            <Calendar  />
          </div>
       </div>
    );
