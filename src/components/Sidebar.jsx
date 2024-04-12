@@ -9,6 +9,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import { FiSettings } from "react-icons/fi";
 import { BiExit } from "react-icons/bi";
+import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
   return (
@@ -16,12 +17,25 @@ const Sidebar = () => {
       <div className='w-52 bg-white min-h-full text-center flex flex-col items-center py-10'>
       <img className='w-10 h-12 mb-10' src={FBNLogo} alt="First Bank" />
       <ul>
-        <SideBarButton word={'Overview'} icon={<FaHouse/>}/>
-        <SideBarButton word={'Delegates'} icon={<ImManWoman/>}/>
-        <SideBarButton word={'Queries'} icon={<MdOutlineQueryBuilder/>}/>
-        <SideBarButton word={'Notifications'} icon={<IoIosNotificationsOutline/>}/>
-        <SideBarButton word={'Message'} icon={<AiOutlineMessage/>}/>
-        <SideBarButton word={'Settings'} icon={< FiSettings/>}/>
+        {/* <NavLink to='' end></NavLink> */}
+        <NavLink to=''>
+          <SideBarButton word={'Overview'} icon={<FaHouse/>}/> 
+        </NavLink>
+        <NavLink to='delegates'>
+           <SideBarButton word={'Delegates'} icon={<ImManWoman/>}/> 
+        </NavLink>
+        <NavLink to='queries'>
+          <SideBarButton word={'Queries'} icon={<MdOutlineQueryBuilder/>}/>
+        </NavLink>
+        <NavLink to='notifications'>
+           <SideBarButton word={'Notifications'} icon={<IoIosNotificationsOutline/>}/>
+        </NavLink>
+        <NavLink to='message'>
+          <SideBarButton word={'Message'} icon={<AiOutlineMessage/>}/>
+        </NavLink>
+        <NavLink to='settings'>
+          <SideBarButton word={'Settings'} icon={< FiSettings/>}/>
+        </NavLink>
       </ul>
       <img className='mt-10 w-20' src={Calender} alt="First Bank" />
       <p  style={{ fontSize: '12px' }} className='text-[#181818] pt-2 pb-3'>Create <br/> Notice</p>

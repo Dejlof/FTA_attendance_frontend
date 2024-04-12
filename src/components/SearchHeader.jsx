@@ -31,7 +31,7 @@ const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${
   return (
     <div className='flex flex-row'>
       <div className='basis-2/3'>
-      <input type="text" name="accountNumber" id="accountNumber" class="block w-40 md:w-full rounded-full border-0 py-2 px-4 text-sm text-gray-400  placeholder:text-gray-400  sm:text-sm sm:leading-6"
+      <input type="text" name="accountNumber" id="accountNumber" className="block w-40 md:w-full rounded-full border-0 py-2 px-4 text-sm text-gray-400  placeholder:text-gray-400  sm:text-sm sm:leading-6"
            placeholder="&#xF002; Search here ..." style={{fontFamily: "Poppins, FontAwesome"}}/>
       </div>
       <div className='flex basis-1/3 justify-end'>
