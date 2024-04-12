@@ -4,14 +4,13 @@ import moment from "moment";
 
 const DayChart = () => {
    const [attendanceData, setAttendanceData] = useState([]);
+   const [monthName, setMonthName] = useState();
    let chartInstance = null;
 
    useEffect(() => {
-      // Generate dummy attendance data
       const dummyData = generateDummyData();
       setAttendanceData(dummyData);
 
-      // Create the chart
       const ctx = document.getElementById("attendanceChart");
       chartInstance = new Chart(ctx, {
          type: "bar",
@@ -19,34 +18,38 @@ const DayChart = () => {
             labels: dummyData.map((day) => day.date),
             datasets: [
                {
-                  label: "Attendance",
-                  data: dummyData.map((day) =>
-                     day.status === "early" ? 1 : day.status === "late" ? 2 : 3
-                  ),
+                  label: "",
+                  data: dummyData.map(() => 1),
                   backgroundColor: dummyData.map((day) =>
                      day.status === "early"
-                        ? "blue"
+                        ? "#003B65"
                         : day.status === "late"
-                        ? "yellow"
-                        : "red"
+                        ? "#FFB200"
+                        : "#FF0000"
                   ),
                   borderWidth: 1,
                },
             ],
          },
          options: {
+            plugins: {
+               legend: {
+                  labels: {
+                     color: "black",
+                  },
+                  display: false,
+               },
+            },
             scales: {
                y: {
                   ticks: {
-                     callback: (value) =>
-                        value === 1 ? "Early" : value === 2 ? "Late" : "Absent",
+                     display: false,
                   },
                },
             },
          },
       });
 
-      // Cleanup function
       return () => {
          if (chartInstance) {
             chartInstance.destroy();
@@ -56,6 +59,8 @@ const DayChart = () => {
 
    const generateDummyData = () => {
       const currentDate = moment();
+      const month = currentDate.format("MMMM");
+      setMonthName(month);
       const daysInMonth = currentDate.daysInMonth();
       const dummyData = [];
       for (let i = 1; i <= daysInMonth; i++) {
@@ -66,7 +71,7 @@ const DayChart = () => {
                ? "late"
                : "absent";
          dummyData.push({
-            date: currentDate.date(i).format("YYYY-MM-DD"),
+            date: currentDate.date(i).format("DD"),
             status,
          });
       }
@@ -74,9 +79,12 @@ const DayChart = () => {
    };
 
    return (
-      <div>
-         <canvas id="attendanceChart" width="400" height="200"></canvas>
-      </div>
+      <>
+         <p className="font-mono text-center my-4">{monthName}</p>
+         <div>
+            <canvas id="attendanceChart"></canvas>
+         </div>
+      </>
    );
 };
 

@@ -11,9 +11,25 @@ const AttendanceChart = () => {
    };
 
    return (
-      <div className="p-6 bg-white rounded flex-[.7]">
+      <div className="p-6 bg-white rounded flex-[.65]">
          <div className="flex items-center justify-between">
-            <h1>Total Attendance</h1>
+            <div className="">
+               <h1>Total Attendance</h1>
+               <div className="flex gap-2 text-[10px]">
+                  <p>
+                     <span className="w-2 h-2 inline-block mr-1 rounded-full  bg-[#003B65]"></span>
+                     Early
+                  </p>
+                  <p>
+                     <span className="w-2 h-2 inline-block mr-1 rounded-full  bg-[#FFB200]"></span>
+                     Late
+                  </p>
+                  <p>
+                     <span className="w-2 h-2 inline-block mr-1 rounded-full  bg-[#FF0000]"></span>
+                     Absent
+                  </p>
+               </div>
+            </div>
             <nav className="list-none font-medium text-[#0000005E] flex gap-3 text-[12px] leading-4">
                <li
                   className={
