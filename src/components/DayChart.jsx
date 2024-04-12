@@ -80,7 +80,7 @@ const DayChart = () => {
 
    return (
       <>
-         <p className="font-mono text-center my-4">{monthName}</p>
+         <p className="font-mono text-center my-2">{monthName}</p>
          <div>
             <canvas id="attendanceChart"></canvas>
          </div>
