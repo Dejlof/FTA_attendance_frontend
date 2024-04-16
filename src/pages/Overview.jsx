@@ -3,7 +3,7 @@ import SearchHeader from "../components/SearchHeader";
 import WelcomeMessage from "../components/WelcomeMessage";
 import OverviewCard from "../components/OverviewCard";
 import AttendanceChart from "../components/AttendanceChart";
-import Calendar from "../components/Calendar";
+import DashboardCalendar from "../components/Calendar";
 
 const Overview = () => {
    return (
@@ -18,7 +18,7 @@ const Overview = () => {
          </div>
          <div className="flex flex-wrap gap-4 items-center justify-between mt-8">
             <AttendanceChart  />
-            <Calendar  />
+            <DashboardCalendar  />
          </div>
       </div>
    );
