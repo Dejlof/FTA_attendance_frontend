@@ -6,7 +6,7 @@ import ListData from './ListData'
 
 const AttendanceList = () => {
   return (
-    <div className='basis-4/5 mr-8 py-10'>
+    <div className='lg:basis-4/5 basis-11/12 mr-8 py-10'>
         <SearchHeader/>
         <AttendancePeriod/>
         <ListData/>

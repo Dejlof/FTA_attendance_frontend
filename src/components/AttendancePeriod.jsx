@@ -6,11 +6,11 @@ const AttendancePeriod = () => {
   return (
     <div className='flex flex-row my-10'>
         <div className='flex basis-1/2'>
-            <h3 className='text-lg mr-3 font-bold'>Attendance List</h3>
+            <h3 className=' text-sm md:text-lg mr-3 font-bold'>Attendance List</h3>
             <PeriodBox>
                 Jan 20, 2024
             </PeriodBox>
-            <FaArrowRight className=' text-[#b8b8b8] mt-1 mx-3' />
+            <FaArrowRight className='hidden lg:inline-block text-[#b8b8b8] mt-1 mx-3' />
             <PeriodBox>
                 Jan 20, 2024
             </PeriodBox>
