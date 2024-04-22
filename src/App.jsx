@@ -1,15 +1,21 @@
-import React from "react"
-import Sidebar from "./components/Sidebar"
-import AttendanceList from "./components/AttendanceList"
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AttendanceListPage from './pages/AttendanceListPage';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 
 function App() {
 
   return (
-      <div className='bg-[#f5f5f5] min-h-screen flex flex-row' style={{ overflowX: 'auto' }}>
-     <Sidebar/>
-     <AttendanceList/>
-      </div>
-    
+      <>
+      <Router>
+        <Routes>
+          <Route path='/' element={<AttendanceListPage />}/>
+          <Route path='/login' element={<LoginPage/>}/>
+          <Route path='signin' element={<SignUpPage/>}/>
+        </Routes>
+      </Router>
+      </>
   )
 }
 

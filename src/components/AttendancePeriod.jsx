@@ -1,8 +1,20 @@
 import React from 'react'
 import PeriodBox from './PeriodBox'
 import { FaArrowRight } from 'react-icons/fa6'
+import { useNavigate } from 'react-router-dom';
 
 const AttendancePeriod = () => {
+    const navigate = useNavigate();
+
+    const handleSelection = (event) => {
+        const selectedValue = event.target.value;
+        if (selectedValue === 'login') {
+            navigate('/login');
+        } else if (selectedValue === 'signin') {
+            navigate('/signin');
+        }
+    };
+
   return (
     <div className='flex flex-row my-10'>
         <div className='flex basis-1/2'>
@@ -19,10 +31,11 @@ const AttendancePeriod = () => {
         <input type="text" name="accountNumber" id="accountNumber" className="block border border-[#CACACA] rounded-md  px-1  text-black placeholder:text-black  sm:text-sm sm:leading-6 mr-5"
            placeholder="&#xF002; Search here .." style={{fontFamily: "Poppins, FontAwesome", fontSize:"0.71em"}}/>
             <PeriodBox>
-            <select name="activity" id="activity">
-        <option value="login">Log In</option>
-         <option value="signin">Sign Up</option>
-         </select>
+            <select name="activity" id="activity" onChange={handleSelection}>
+            <option value="">Select</option>
+            <option value="login">Log In</option>
+            <option value="signin">Sign Up</option>
+            </select>
             </PeriodBox>
         </div>
       
