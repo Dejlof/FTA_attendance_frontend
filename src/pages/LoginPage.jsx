@@ -1,13 +1,17 @@
 import React from 'react';
 import FirstBankLogo from '../assets/images/FirstBankLogo.jpg';
 import { BiExit } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
+import { LOGIN_URL } from '../BaseURLs/AllURLs';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+
     const [isCheckBox, setCheckBox] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
+    const [loginID, setLoginID] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState('');
 
     const tickCheckBox = () => {
         setCheckBox(!isCheckBox);
@@ -38,6 +42,50 @@ const LoginPage = () => {
         </svg>
     );
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setErrorMessage('');
+        console.log('LoginID: ', loginID);
+        console.log('Password: ', password);
+
+        if (!loginID || !password) {
+            setErrorMessage('Login ID and Password are required!');
+            setTimeout(() => {
+                setErrorMessage('');
+              }, 3000);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${LOGIN_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    loginID, password
+                }),
+            });
+
+            const data = await response.json();
+            if (response.status === 200) {
+                console.log('Login successful: ', data);
+                navigate('/');
+            } else {
+                setErrorMessage(data.message || 'Login failed.');
+                setTimeout(() => {
+                    setErrorMessage('');
+                  }, 3000);
+            }
+        } catch (error) {
+            console.log('Login failed: ', error.message);
+            setErrorMessage('An error occurred while processing your request.');
+            setTimeout(() => {
+                setErrorMessage('');
+              }, 3000);
+        }
+    };
+
   return (
     <>
     <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
@@ -48,19 +96,24 @@ const LoginPage = () => {
             <h1 className='text-2xl lg:text-3xl'>Login</h1>
             <p className='py-1'>Welcome back!</p>
 
-            <form className='py-4 gap-2'>
+            <form className='py-4 gap-2' onSubmit={handleSubmit}>
                 <label>Login ID
                     <br></br>
-                    <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Enter your login ID' />
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your login ID'
+                    type='text'
+                    value={loginID}
+                    onChange={(e) => setLoginID(e.target.value)}
+                    />
                 </label>
                 <br></br>
                 <section className='relative'>
                     <label>Password
                         <br></br>
-                        <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Password'
+                        <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Password'
                         type={showPassword ? 'text' : 'password'}
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)} />
+                        onChange={(e) => setPassword(e.target.value)} />
                         <span  className='absolute mt-5 md:mt-6 right-4 md:right-8'
                         onClick={togglePassword}>{showPassword ? eye : eyeSlash}</span>
                     </label>
@@ -68,14 +121,20 @@ const LoginPage = () => {
                 <br></br>
                 <section className='flex md:flex-row md:px-1 justify-between'>
                     <span className='flex mb-0.5' onClick={tickCheckBox}>
-                        <span className='mr-1 mt-0.5 lg:mt-1'>
+                        <span className='mr-1 lg:mt-1'>
                             {isCheckBox ? tickChecked : tickBox}
                         </span>Remember me
                     </span>
                     <p className='underline' onClick={() => navigate('/forgotPassword')}>Forgot password?</p>
                 </section>
+                <br></br>
+                {errorMessage && <p className='text-red-500'>
+                    {errorMessage}</p>}
+                <button className='bg-[#d7bd14] px-32 py-3 mt-4 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+                type='submit'
+                >Log In</button>
             </form>
-            <button className='bg-[#d7bd14] px-32 py-3 mt-4 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'>Log In</button>
+            
             <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/')}/>}</span>
         </div>
     </article>
