@@ -130,7 +130,7 @@ const SignUpPage = () => {
                 {errorMessage && <p className='text-red-500'>
                     {errorMessage}
                     </p>}
-                <button className='bg-[#d7bd14] px-28 py-3 mt-6 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+                <button className='bg-[#d7bd14] px-28 py-3 mt-6 md:px-40 md:py-4 rounded-3xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
                 type='submit'>Sign Up</button>
             </form>
             <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>

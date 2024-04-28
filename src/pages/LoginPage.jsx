@@ -130,7 +130,7 @@ const LoginPage = () => {
                 <br></br>
                 {errorMessage && <p className='text-red-500'>
                     {errorMessage}</p>}
-                <button className='bg-[#d7bd14] px-32 py-3 mt-4 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+                <button className='bg-[#d7bd14] px-32 py-3 mt-4 md:px-40 md:py-4 rounded-3xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
                 type='submit'
                 >Log In</button>
             </form>

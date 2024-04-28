@@ -147,7 +147,7 @@ const PasswordReset = () => {
                   {errorMessage}
                 </p>}
                 <br></br>
-              <button className='bg-[#d7bd14] px-32 py-3 my-3 md:my-5 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+              <button className='bg-[#d7bd14] px-32 py-3 my-3 md:my-5 md:px-40 md:py-4 rounded-3xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
               type='submit' >
                 Continue
               </button>
