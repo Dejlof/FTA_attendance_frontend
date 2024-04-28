@@ -135,7 +135,7 @@ const LoginPage = () => {
                 >Log In</button>
             </form>
             
-            <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/')}/>}</span>
+            <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>
         </div>
     </article>
     </>

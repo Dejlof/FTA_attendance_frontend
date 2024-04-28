@@ -93,7 +93,7 @@ const ForgotPassword = () => {
             <span className='mt-0.5 lg:mt-1'>{arrow}</span>
             Back to <span className='text-[#d7bd14]' onClick={() => navigate('/login')}>log in</span>
           </aside>
-          <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/')}/>}</span>
+          <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>
         </div>
     </article>
     </>
