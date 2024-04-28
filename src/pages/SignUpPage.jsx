@@ -45,7 +45,15 @@ const SignUpPage = () => {
                 setErrorMessage('');
             }, 3000);
             return;
+        } else if (password !== confirmPassword) {
+            setErrorMessage('Passwords do not match!');
+            setTimeout(() => {
+              setErrorMessage('');
+            }, 3000);
+        } else {
+            setErrorMessage('');
         }
+        
         try {
             const response = await fetch(`${SignUp_URL}`, {
                 method: 'POST',
@@ -76,8 +84,8 @@ const SignUpPage = () => {
   return (
     <>
     <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
-        <div className='lg:w-1/2 lg:bg-[#033b63] hidden lg:block md:relative'>
-            <img src={FirstBankLogo} className='w-36 absolute top-56 right-64 border-none' />
+        <div className='md:w-1/2 lg:bg-[#033b63] hidden lg:flex lg:items-center lg:justify-center lg:relative'>
+            <img src={FirstBankLogo} className='w-36 border-none' />
         </div>
         <div className='flex flex-col h-screen justify-center items-center lg:w-1/2'>
             <h1 className='text-2xl lg:text-3xl'>Register</h1>

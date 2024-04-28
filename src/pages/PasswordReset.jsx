@@ -1,12 +1,16 @@
 import React from 'react';
 import FirstBankLogo from '../assets/images/FirstBankLogo.jpg';
 import { BiExit } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { PwdReset_URL } from '../BaseURLs/AllURLs';
 
 const PasswordReset = () => {
+  const emailLocation = useLocation();
+  const { email } = emailLocation.state || {};
   const [code, setCode] = React.useState(['', '', '', '', '']);
   const inputRefs = React.useRef([]);
   const [activeIndex, setActiveIndex] = React.useState(null);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -64,44 +68,90 @@ const PasswordReset = () => {
     </svg>
   );
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    const verificationCode = code.join('');
+    if (verificationCode.length < 5 || !/^\d+$/.test(code)) {
+      setErrorMessage('Please enter a valid verification code!');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000);
+    }
+
+    try {
+      const response = await fetch(`${PwdReset_URL}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, verificationCode })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Code verification successful: ', data);
+        navigate('/setNewPassword');
+      } else {
+        console.error('Code verification failed!', response.status);
+        setErrorMessage(data.message || 'Code verification failed!');
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.log('An error occured: ', error);
+      setErrorMessage('An error occured while processing your request.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000);
+    }
+  };
+
+
   return (
     <>
     <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
-        <div className='lg:w-1/2 lg:bg-[#033b63] hidden lg:block lg:relative'>
-            <img src={FirstBankLogo} className='w-36 absolute top-56 right-64 border-none' />
+        <div className='md:w-1/2 lg:bg-[#033b63] hidden lg:flex lg:items-center lg:justify-center lg:relative'>
+            <img src={FirstBankLogo} className='w-36 border-none' />
         </div>
         <div className='flex flex-col h-screen justify-center items-center lg:w-1/2'>
             <h1 className='text-2xl lg:text-3xl'>Password Reset</h1>
-            <p className='py-1'>We sent a code to {}</p>
+            <p className='py-1'>We sent a code to { email }</p>
 
-            <section className='flex pt-8 pb-6'>
-              {code.map((value, index) => (
-                <input key={index}
-                type='text'
-                maxLength={1}
-                value={value}
-                onChange={(event) => handleChange(index, event.target.value)}
-                onKeyPress={(event) => handleKeyPress(index, event)}
-                ref={(el) => (inputRefs.current[index] = el)}
-                onClick={() => handleClick(index)}
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={() => handleMouseLeave}
-                className='focus:outline-none'
-                style={{ width: '45px',
-                height: '50px',
-                marginRight: '10px',
-                border: `2px solid ${activeIndex === index ? '#d7bd14' : 'none' }`,
-                borderRadius: '5px',
-                textAlign: 'center',
-                backgroundColor: `${activeIndex === index ? '#fff' : '#efefef'}`,
-              }}
-                />
-              ))}
+            <form onSubmit={handleSubmit}>
+              <section className='flex pt-8 pb-6'>
+                {code.map((value, index) => (
+                  <input key={index}
+                  type='text'
+                  maxLength={1}
+                  value={value}
+                  onChange={(event) => handleChange(index, event.target.value)}
+                  onKeyPress={(event) => handleKeyPress(index, event)}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  onClick={() => handleClick(index)}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={() => handleMouseLeave}
+                  className='focus:outline-none'
+                  style={{ width: '45px',
+                  height: '50px',
+                  marginRight: '10px',
+                  border: `2px solid ${activeIndex === index ? '#d7bd14' : 'none' }`,
+                  borderRadius: '5px',
+                  textAlign: 'center',
+                  backgroundColor: `${activeIndex === index ? '#fff' : '#efefef'}`,
+                }}
+                  />
+                ))}
+                  <br></br>
+              </section>
+              {errorMessage && <p className='text-red-500'>
+                  {errorMessage}
+                </p>}
                 <br></br>
-            </section>
-            <button className='bg-[#d7bd14] px-32 py-3 my-3 md:my-5 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'>
-              Continue
-            </button>
+              <button className='bg-[#d7bd14] px-32 py-3 my-3 md:my-5 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+              type='submit' >
+                Continue
+              </button>
+            </form>
 
             <aside className='py-3 md:py-4'>
               Didn&apos;t receive any mail? <span className='underline text-[#d7bd14]'>Click to resend</span>

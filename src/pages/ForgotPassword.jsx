@@ -39,7 +39,7 @@ const ForgotPassword = () => {
       const data = await response.json();
       if (response.status === 200) {
         console.log('Request sent successfully: ', data);
-        navigate('/passwordReset')
+        navigate('/passwordReset', { state: { email: email }})
       } else {
         setErrorMessage(data.message || 'Request failed.');
         setTimeout(() => {
@@ -59,9 +59,9 @@ const ForgotPassword = () => {
 
   return (
     <>
-    <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
-        <div className='lg:w-1/2 lg:bg-[#033b63] hidden lg:block lg:relative'>
-            <img src={FirstBankLogo} className='w-36 absolute top-56 right-64 border-none' />
+      <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
+        <div className='md:w-1/2 lg:bg-[#033b63] hidden lg:flex lg:items-center lg:justify-center lg:relative'>
+            <img src={FirstBankLogo} className='w-36 border-none' />
         </div>
         <div className='flex flex-col h-screen justify-center items-center lg:w-1/2'>
           <h1 className='text-2xl lg:text-3xl'>Forgot Password</h1>
@@ -95,7 +95,7 @@ const ForgotPassword = () => {
           </aside>
           <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>
         </div>
-    </article>
+      </article>
     </>
   )
 }

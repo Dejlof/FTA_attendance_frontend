@@ -2,9 +2,13 @@ import React from 'react';
 import FirstBankLogo from '../assets/images/FirstBankLogo.jpg';
 import { BiExit } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
+import { SetNewPwd_URL } from '../BaseURLs/AllURLs';
 
 const SetNewPassword = () => {
   const navigate = useNavigate();
+  const [password, setPassword] = React.useState();
+  const [confirmPassword, setConfirmPassword] = React.useState();
+  const [errorMessage, setErrorMessage] = React.useState();
 
   const arrow = (
     <svg width='10' height='10'>
@@ -12,32 +16,88 @@ const SetNewPassword = () => {
     </svg>
   );
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    if (!password|| !confirmPassword) {
+      setErrorMessage('Please fill in all input fields!');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000);
+    } else if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match!');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000);
+    } else {
+      setErrorMessage('');
+    }
+
+    try {
+      const response = await fetch(`${SetNewPwd_URL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, confirmPassword })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Password reset successfully!: ', data);
+        navigate('/delegates');
+      } else {
+        console.log('An error occurred while processing your request!', response.status);
+        setErrorMessage(data.message || 'Password reset error!')
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.log('An error occurred: ', error);
+      setErrorMessage('An error occurred while processing your request!');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3000);
+    }
+  }
+
   return (
     <>
     <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
-        <div className='lg:w-1/2 lg:bg-[#033b63] hidden lg:block lg:relative'>
-            <img src={FirstBankLogo} className='w-36 absolute top-56 right-64 border-none' />
+        <div className='md:w-1/2 lg:bg-[#033b63] hidden lg:flex lg:items-center lg:justify-center lg:relative'>
+            <img src={FirstBankLogo} className='w-36 border-none' />
         </div>
         <div className='flex flex-col h-screen justify-center items-center lg:w-1/2'>
             <h1 className='text-2xl lg:text-3xl'>Set new Password</h1>
             <p className='py-1'>Must be at least 8 characters.</p>
 
-            <form className='pt-6 pb-4 gap-2'>
-                <label>Password
-                    <br></br>
-                    <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white text-[#003B65]' placeholder='Password' />
-                </label>
-                <br></br>
-                <label>Confirm Password
-                    <br></br>
-                    <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white text-[#003B65]' placeholder='Password' />
-                </label>
-                <br></br>
+            <form className='pt-6 pb-4 gap-2' onSubmit={handleSubmit}>
+              <label>Password
+                  <br></br>
+                  <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white text-[#003B65]'
+                  placeholder='Password'
+                  type='text'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} />
+              </label>
+              <br></br>
+              <label>Confirm Password
+                  <br></br>
+                  <input className='border border-gray-200 bg-gray-100 pl-5 pr-2 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white text-[#003B65]'
+                  placeholder='Password'
+                  type='text'
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)} />
+              </label>
+              <br></br>
+              {errorMessage && <p className='text-red-500'>
+                {errorMessage}
+                </p>}
+              <br></br>
+              <button className='bg-[#d7bd14] px-24 py-3 my-3 md:my-5 md:px-32 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+              type='submit'>
+                Reset Password
+              </button>
             </form>
-            <button className='bg-[#d7bd14] px-24 py-3 my-3 md:my-5 md:px-32 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
-            onClick={()=> navigate('/passwordReset')}>
-              Reset Password
-            </button>
               <aside className='flex flex-row gap-1 font-medium'>
                 <span className='mt-0.5 lg:mt-1'>{arrow}</span>
                 Back to <span className='text-[#d7bd14]' onClick={() => navigate('/login')}>log in</span>
