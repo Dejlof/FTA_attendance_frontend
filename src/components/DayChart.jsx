@@ -5,13 +5,20 @@ import { BASE_URL } from "../utils/api";
 
 const DayChart = () => {
    const [attendanceData, setAttendanceData] = useState(null);
+   const [day, setDay] = useState("");
 
    useEffect(() => {
       axios
          .get(`${BASE_URL}AttendanceData`)
          .then((response) => {
             const fetchedData = response.data;
-            const daysInMonth = new Date(2024, 4, 0).getDate();
+
+            const firstDate = new Date(fetchedData[0].CreatedAt);
+            setDay(firstDate.toLocaleDateString('en-US', { weekday: 'long' }));
+            const month = firstDate.getMonth();
+            const year = firstDate.getFullYear();
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
             const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
             const early = Array(daysInMonth).fill(0);
             const late = Array(daysInMonth).fill(0);
@@ -66,10 +73,19 @@ const DayChart = () => {
             stacked: true,
          },
       },
+      plugins: {
+         legend: {
+            labels: {
+               color: "black",
+            },
+            display: false,
+         },
+      },
    };
 
    return (
       <div>
+         <p className="font-mono text-center my-2">{day}</p>
          {attendanceData && <Bar data={attendanceData} options={options} />}
       </div>
    );
