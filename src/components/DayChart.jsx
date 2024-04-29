@@ -1,90 +1,77 @@
 import React, { useEffect, useState } from "react";
-import Chart from "chart.js/auto";
-import moment from "moment";
+import axios from "axios";
+import { Bar } from "react-chartjs-2";
+import { BASE_URL } from "../utils/api";
 
 const DayChart = () => {
-   const [attendanceData, setAttendanceData] = useState([]);
-   const [monthName, setMonthName] = useState();
-   let chartInstance = null;
+   const [attendanceData, setAttendanceData] = useState(null);
 
    useEffect(() => {
-      const dummyData = generateDummyData();
-      setAttendanceData(dummyData);
+      axios
+         .get(`${BASE_URL}AttendanceData`)
+         .then((response) => {
+            const fetchedData = response.data;
+            const daysInMonth = new Date(2024, 4, 0).getDate();
+            const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+            const early = Array(daysInMonth).fill(0);
+            const late = Array(daysInMonth).fill(0);
+            const absent = Array(daysInMonth).fill(0);
 
-      const ctx = document.getElementById("attendanceChart");
-      chartInstance = new Chart(ctx, {
-         type: "bar",
-         data: {
-            labels: dummyData.map((day) => day.date),
-            datasets: [
-               {
-                  label: "",
-                  data: dummyData.map(() => 1),
-                  backgroundColor: dummyData.map((day) =>
-                     day.status === "early"
-                        ? "#003B65"
-                        : day.status === "late"
-                        ? "#FFB200"
-                        : "#FF0000"
-                  ),
-                  borderWidth: 1,
-               },
-            ],
-         },
-         options: {
-            plugins: {
-               legend: {
-                  labels: {
-                     color: "black",
-                  },
-                  display: false,
-               },
-            },
-            scales: {
-               y: {
-                  ticks: {
-                     display: false,
-                  },
-               },
-            },
-         },
-      });
+            fetchedData.forEach((item) => {
+               const day = new Date(item.CreatedAt).getDate() - 1;
+               if (item.IsPresent) {
+                  if (item.IsLate) {
+                     late[day]++;
+                  } else {
+                     early[day]++;
+                  }
+               } else {
+                  absent[day]++;
+               }
+            });
 
-      return () => {
-         if (chartInstance) {
-            chartInstance.destroy();
-         }
-      };
+            setAttendanceData({
+               labels: labels,
+               datasets: [
+                  {
+                     label: "Early",
+                     data: early,
+                     backgroundColor: "#003B65",
+                  },
+                  {
+                     label: "Late",
+                     data: late,
+                     backgroundColor: "#FFB200",
+                  },
+                  {
+                     label: "Absent",
+                     data: absent,
+                     backgroundColor: "#FF0000",
+                  },
+               ],
+            });
+         })
+         .catch((error) => {
+            console.error("Error fetching data: ", error);
+         });
    }, []);
 
-   const generateDummyData = () => {
-      const currentDate = moment();
-      const month = currentDate.format("MMMM");
-      setMonthName(month);
-      const daysInMonth = currentDate.daysInMonth();
-      const dummyData = [];
-      for (let i = 1; i <= daysInMonth; i++) {
-         const status =
-            Math.random() < 0.7
-               ? "early"
-               : Math.random() < 0.9
-               ? "late"
-               : "absent";
-         dummyData.push({
-            date: currentDate.date(i).format("DD"),
-            status,
-         });
-      }
-      return dummyData;
+   const options = {
+      responsive: true,
+      scales: {
+         x: {
+            stacked: true,
+         },
+         y: {
+            stacked: true,
+         },
+      },
    };
 
    return (
-      <>
-         <p className="font-mono text-center my-2">{monthName}</p>
-         <div>
-            <canvas id="attendanceChart"></canvas>
-         </div>
-      </>
+      <div>
+         {attendanceData && <Bar data={attendanceData} options={options} />}
+      </div>
    );
 };
 

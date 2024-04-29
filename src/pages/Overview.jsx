@@ -8,6 +8,7 @@ import GenderCard from "../components/GenderCard";
 import DelegatesCard from "../components/DelegatesCard";
 import NoticeCard from "../components/NoticeCard";
 import axios from "axios";
+import { BASE_URL } from "../utils/api";
 
 const Overview = () => {
    const [delegatesData, setDelegatesData] = useState([]);
@@ -15,10 +16,11 @@ const Overview = () => {
    let delegatesPresent = 0,
       delegatesAbsent = 0,
       delegatesLate = 0;
+   console.log(BASE_URL);
    useEffect(() => {
       const source = axios.CancelToken.source();
       axios
-         .get("http://localhost:3000/DelegatesData", {
+         .get(`${BASE_URL}DelegatesData`, {
             cancelToken: source.token,
          })
          .then((response) => {
@@ -32,7 +34,7 @@ const Overview = () => {
             }
          });
       axios
-         .get("http://localhost:3000/AttendanceData", {
+         .get(`${BASE_URL}AttendanceData`, {
             cancelToken: source.token,
          })
          .then((response) => {
@@ -51,15 +53,17 @@ const Overview = () => {
       };
    }, []);
 
-   attendanceData.forEach((data) => {
-      if (data.IsLate == true) {
-         delegatesLate++;
-      } else if (data.IsPresent == true) {
-         delegatesPresent++;
-      } else if (data.IsPresent == false) {
-         delegatesAbsent++;
-      }
-   });
+   if (attendanceData) {
+      attendanceData.forEach((data) => {
+         if (data.IsLate == true) {
+            delegatesLate++;
+         } else if (data.IsPresent == true) {
+            delegatesPresent++;
+         } else if (data.IsPresent == false) {
+            delegatesAbsent++;
+         }
+      });
+   }
 
    return (
       <div className="basis-4/5 mr-8 py-10">
