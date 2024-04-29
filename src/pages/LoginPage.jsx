@@ -48,43 +48,52 @@ const LoginPage = () => {
         console.log('LoginID: ', loginID);
         console.log('Password: ', password);
 
-        if (!loginID || !password) {
-            setErrorMessage('Login ID and Password are required!');
+    const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!loginID || !password) {
+        setErrorMessage('Login ID and Password are required!');
+        setTimeout(() => {
+            setErrorMessage('');
+            }, 3000);
+        return;
+    } else if (!emailValidator.test(loginID)) {
+        setErrorMessage('Please enter a valid email address!');
+        setTimeout(() => {
+            setErrorMessage('');
+        }, 3000);
+        return;
+    } else {
+        setErrorMessage('');
+    }
+
+    try {
+        const response = await fetch(`${LOGIN_URL}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                loginID, password
+            }),
+        });
+
+        const data = await response.json();
+        if (response.status === 200) {
+            console.log('Login successful: ', data);
+            navigate('/');
+        } else {
+            setErrorMessage(data.message || 'Login failed.');
             setTimeout(() => {
                 setErrorMessage('');
-              }, 3000);
-            return;
+                }, 3000);
         }
-
-        try {
-            const response = await fetch(`${LOGIN_URL}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    loginID, password
-                }),
-            });
-
-            const data = await response.json();
-            if (response.status === 200) {
-                console.log('Login successful: ', data);
-                navigate('/');
-            } else {
-                setErrorMessage(data.message || 'Login failed.');
-                setTimeout(() => {
-                    setErrorMessage('');
-                  }, 3000);
-            }
-        } catch (error) {
-            console.log('Login failed: ', error.message);
-            setErrorMessage('An error occurred while processing your request.');
-            setTimeout(() => {
-                setErrorMessage('');
-              }, 3000);
-        }
-    };
+    } catch (error) {
+        console.log('Login failed: ', error.message);
+        setErrorMessage('An error occurred while processing your request.');
+        setTimeout(() => {
+            setErrorMessage('');
+            }, 3000);
+    }
+};
 
   return (
     <>
