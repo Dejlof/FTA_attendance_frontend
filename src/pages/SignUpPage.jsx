@@ -16,7 +16,11 @@ const SignUpPage = () => {
         showConfirmPasswordContent(!showConfirmPassword);
     };
 
-    const [fullName, setFullName] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
+    const [staffID, setStaffID] = React.useState('');
+    const [title, setTitle] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
@@ -35,12 +39,44 @@ const SignUpPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessage('');
-        console.log('Full Name: ', fullName);
-        console.log('Password: ', password);
-        console.log('Password again: ', confirmPassword);
 
-        if (!fullName || !password || !confirmPassword) {
+        const namesValidator = /^[a-zA-Z]+$/;
+        const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const staffIdValidator = /^[a-zA-Z]{2}\d{6}$/;
+        const titleValidator = /^(mr|ms|mrs|miss)$/i;
+
+        if (!email || !firstName || !lastName || !staffID || !title || !password || !confirmPassword) {
             setErrorMessage('Please complete all input fields!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        } else if (!emailValidator.test(email)) {
+            setErrorMessage('Input a valid email address!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        } else if (!staffIdValidator.test(staffID)) {
+            setErrorMessage('Input a valid staffID!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        } else if (!namesValidator.test(firstName) || !namesValidator.test(lastName)) {
+            setErrorMessage('Input valid names!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        } else if (firstName.length > 12 || lastName.length > 12) {
+            setErrorMessage('Name is too long!');
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return;
+        } else if (!titleValidator.test(title)) {
+            setErrorMessage('Input a valid title!');
             setTimeout(() => {
                 setErrorMessage('');
             }, 3000);
@@ -50,6 +86,7 @@ const SignUpPage = () => {
             setTimeout(() => {
               setErrorMessage('');
             }, 3000);
+            return;
         } else {
             setErrorMessage('');
         }
@@ -59,13 +96,13 @@ const SignUpPage = () => {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ 
-                    fullName, password, confirmPassword
+                    email, firstName, lastName, staffID, title, password
                 })
             });
             const data = await response.json();
             if (response.status === 200) {
                 console.log('Sign up successful: ', data);
-                navigate('/');
+                navigate('/login');
             } else {
                 setErrorMessage(data.message || 'Signup request failed!');
                 setTimeout(() => {
@@ -83,57 +120,96 @@ const SignUpPage = () => {
 
   return (
     <>
-    <article className='flex h-screen flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm'>
+    <article className='flex h-full flex-col lg:flex-row text-[#003B65] text-xs lg:text-sm relative'>
         <div className='md:w-1/2 lg:bg-[#033b63] hidden lg:flex lg:items-center lg:justify-center lg:relative'>
             <img src={FirstBankLogo} className='w-36 border-none' />
         </div>
-        <div className='flex flex-col h-screen justify-center items-center lg:w-1/2'>
-            <h1 className='text-2xl lg:text-3xl'>Register</h1>
+        <div className='flex flex-col h-full justify-center items-center lg:w-1/2'>
+            <h1 className='text-2xl lg:text-3xl pt-4 lg:pt-8'>Register</h1>
             <p className='py-1'>Welcome! Please fill in your credentials.</p>
 
             <form className='py-4' onSubmit={handleSubmit}>
-                <label>Full Name
+                <label>Email:
                     <br></br>
-                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white'
-                    placeholder='Enter your login ID'
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your email address'
                     type='text'
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    />
+                </label>
+                <br></br>
+                <label>First Name
+                    <br></br>
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your first name'
+                    type='text'
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </label>
+                <br></br>
+                <label>Last Name
+                    <br></br>
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your last name'
+                    type='text'
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    />
+                </label>
+                <br></br>
+                <label>Staff ID
+                    <br></br>
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your staff ID'
+                    type='text'
+                    value={staffID}
+                    onChange={(e) => setStaffID(e.target.value)}
+                    />
+                </label>
+                <br></br>
+                <label>Title
+                    <br></br>
+                    <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white'
+                    placeholder='Enter your title (Mr, Mrs, Miss...)'
+                    type='text'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     />
                 </label>
                 <br></br>
                 <section className='relative'>
                     <label>Password
                         <br></br>
-                        <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Password' 
+                        <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Password' 
                         type={showPassword ? 'text' : 'password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}/>
-                        <span  className='absolute mt-5 md:mt-6 right-6 md:right-8'
+                        <span  className='absolute mt-4 md:mt-5 right-6 md:right-8'
                         onClick={togglePassword}>{showPassword ? eye : eyeSlash}</span>
                     </label>
                 </section>
-                <br></br>
                 <section className='relative'>
                     <label>Confirm Password
                         <br></br>
-                        <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Confirm Password'
+                        <input className='border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-2 mt-1 mb-2 rounded-md font-extralight focus:outline-none focus:bg-white' placeholder='Confirm Password'
                         value={confirmPassword}
                         type={showConfirmPassword ? 'text' : 'password'}
                         onChange={(event) => setConfirmPassword(event.target.value)} />
-                        <span className='absolute mt-5 md:mt-6 right-6 md:right-8'
+                        <span className='absolute mt-4 md:mt-5 right-6 md:right-8'
                         onClick={confirmTogglePassword}>
-                            {showPassword ? eye : eyeSlash}</span>
+                            {showConfirmPassword ? eye : eyeSlash}</span>
                     </label>
                 </section>
                 <br></br>
-                {errorMessage && <p className='text-red-500'>
+                {errorMessage && <p className='text-red-500 my-0'>
                     {errorMessage}
                     </p>}
-                <button className='bg-[#d7bd14] px-28 py-3 mt-6 md:px-40 md:py-4 rounded-3xl hover:bg-white hover:border hover:border-[#d7bd14] relative'
+                <button className='bg-[#d7bd14] px-28 py-2 mt-3 md:mb-3 md:px-40 rounded-3xl hover:bg-white hover:border hover:border-[#d7bd14]'
                 type='submit'>Sign Up</button>
             </form>
-            <span className='absolute p-2 bg-gray-100 rounded-md bottom-12 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>
+            <span className='absolute p-2 bg-gray-100 rounded-md bottom-4 right-20'>{<BiExit onClick={() => navigate('/delegates')}/>}</span>
         </div>
     </article>
     </>

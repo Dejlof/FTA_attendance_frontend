@@ -13,6 +13,9 @@ const LoginPage = () => {
     const [password, setPassword] = React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
 
+    const [, setIsLoggedIn] = React.useState(false);
+    const [, setToken] = React.useState(null);
+
     const tickCheckBox = () => {
         setCheckBox(!isCheckBox);
     };
@@ -77,8 +80,10 @@ const LoginPage = () => {
         });
 
         const data = await response.json();
-        if (response.status === 200) {
+        if (response.ok && data.token) {
             console.log('Login successful: ', data);
+            setToken(data.token);
+            setIsLoggedIn(true);
             navigate('/');
         } else {
             setErrorMessage(data.message || 'Login failed.');
@@ -94,6 +99,14 @@ const LoginPage = () => {
             }, 3000);
     }
 };
+
+React.useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+        setToken(storedToken);
+        setIsLoggedIn(true);
+    }
+}, []);
 
   return (
     <>
