@@ -66,10 +66,10 @@ const Overview = () => {
    }
 
    return (
-      <div className="basis-4/5 mr-8 py-10">
+      <div className="flex-1 py-10">
          <SearchHeader />
          <WelcomeMessage />
-         <div className="cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+         <div className="cards grid w-fit sm:w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <OverviewCard
                title={"Total Delegates"}
                number={delegatesData.length}

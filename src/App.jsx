@@ -11,10 +11,12 @@ function App() {
          style={{ overflowX: "auto" }}
       >
          <Sidebar />
-         <Routes>
-            <Route path="" element={<Overview />} />
-            <Route path="delegates" element={<AttendanceList />} />
-         </Routes>
+         <div className="flex-1 mx-4">
+            <Routes>
+               <Route path="" element={<Overview />} />
+               <Route path="delegates" element={<AttendanceList />} />
+            </Routes>
+         </div>
       </div>
    );
 }
