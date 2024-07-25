@@ -81,13 +81,13 @@ const Overview = () => {
             <OverviewCard title={"Delegates Absent"} number={delegatesAbsent} />
             <OverviewCard title={"Late Delegates"} number={delegatesLate} />
          </div>
-         <div className="flex flex-wrap gap-4 items-center justify-between mt-8">
+         <div className="flex flex-col sm:flex-row gap-4 justify-between mt-8">
             <AttendanceChart />
             <DashboardCalendar />
          </div>
 
-         <div className=" flex flex-wrap gap-4 items-center justify-between mt-8 ">
-            <div className="flex  gap-6 flex-[.66] ">
+         <div className=" flex flex-col sm:flex-row gap-4 justify-between mt-8 ">
+            <div className="flex flex-col sm:flex-row  gap-6 flex-[.66] ">
                <GenderCard />
                <DelegatesCard />
             </div>
