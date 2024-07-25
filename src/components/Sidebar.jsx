@@ -1,35 +1,116 @@
-import React from 'react'
-import SideBarButton from './SideBarButton'
+import React, { useState } from "react";
+import SideBarButton from "./SideBarButton";
 import { FaHouse } from "react-icons/fa6";
-import FBNLogo from '../assets/images/FBNLogo.jpg'
-import Calender from '../assets/images/Calender.png'
+import FBNLogo from "../assets/images/FBNLogo.jpg";
+import Calender from "../assets/images/Calender.png";
 import { ImManWoman } from "react-icons/im";
 import { MdOutlineQueryBuilder } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import { FiSettings } from "react-icons/fi";
 import { BiExit } from "react-icons/bi";
+import { NavLink } from "react-router-dom";
+import { CiMenuFries } from "react-icons/ci";
 
 const Sidebar = () => {
-  return (
-    <div className=' text-[#8A8A8A] basis-1/12 lg:basis-1/5 mr-5 lg:mr-0 text-s lg:text-sm'>
-      <div className='lg:w-52 w-24 bg-white min-h-full text-center flex flex-col items-center py-10'>
-      <img className='lg:w-10 lg:h-12 w-5 h-6 mb-10' src={FBNLogo} alt="First Bank" />
-      <ul>
-        <SideBarButton word={'Overview'} icon={<FaHouse/>}/>
-        <SideBarButton word={'Delegates'} icon={<ImManWoman/>}/>
-        <SideBarButton word={'Queries'} icon={<MdOutlineQueryBuilder/>}/>
-        <SideBarButton word={'Notifications'} icon={<IoIosNotificationsOutline/>}/>
-        <SideBarButton word={'Message'} icon={<AiOutlineMessage/>}/>
-        <SideBarButton word={'Settings'} icon={< FiSettings/>}/>
-      </ul>
-      <img className='mt-10 w-10 lg:w-20' src={Calender} alt="First Bank" />
-      <p  className='text-[#181818] pt-2 pb-3 text-s lg:text-sm'>Create <br/> Notice</p>
-      <button className='bg-[#003B65] text-white px-2 lg:px-5 py-1 mb-10 text-s lg:text-sm'>Create</button>
-      <SideBarButton word={'Exit'} icon={<BiExit/>}/>
-      </div>
-    </div>
-  )
-}
+   const [isSideNav, setIsSideNav] = useState(false);
 
-export default Sidebar
+   const openSideNav = () => setIsSideNav(true);
+   const closeSideNav = () => setIsSideNav(false);
+   return (
+      <div className=" text-[#8A8A8A]" style={{ fontSize: "0.8em" }}>
+         <div
+            className={` ${
+               isSideNav ? "w-52" : "w-12"
+            }  bg-white min-h-full text-center flex flex-col items-center py-10 ease-in transition-all duration-500`}
+         >
+            {isSideNav && (
+               <div className="flex mb-10 items-center gap-16 justify-between">
+                  <img className="w-10 h-12 " src={FBNLogo} title="FirstBank Logo" alt="First Bank" />
+                  <div
+                     className="text-2xl cursor-pointer hover:scale-105 transition-all duration-300"
+                     onClick={closeSideNav}
+                     title="close sidebar"
+                  >
+                     X
+                  </div>
+               </div>
+            )}
+            <ul>
+               {!isSideNav && (
+                  <CiMenuFries
+                     className="inline-block mb-10 cursor-pointer"
+                     size={26}
+                     onClick={openSideNav}
+                     title="open sidebar"
+                  />
+               )}
+               <NavLink to="">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Overview"}
+                     icon={<FaHouse />}
+                  />
+               </NavLink>
+               <NavLink to="delegates">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Delegates"}
+                     icon={<ImManWoman />}
+                  />
+               </NavLink>
+               <NavLink to="queries">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Queries"}
+                     icon={<MdOutlineQueryBuilder />}
+                  />
+               </NavLink>
+               <NavLink to="notifications">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Notifications"}
+                     icon={<IoIosNotificationsOutline />}
+                  />
+               </NavLink>
+               <NavLink to="message">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Message"}
+                     icon={<AiOutlineMessage />}
+                  />
+               </NavLink>
+               <NavLink to="settings">
+                  <SideBarButton
+                     isSideNav={isSideNav}
+                     word={"Settings"}
+                     icon={<FiSettings />}
+                  />
+               </NavLink>
+            </ul>
+            {isSideNav && (
+               <div className="calendar">
+                  <img className="mt-10 w-20" src={Calender} alt="First Bank" />
+                  <p
+                     style={{ fontSize: "12px" }}
+                     className="text-[#181818] pt-2 pb-3"
+                  >
+                     Create <br /> Notice
+                  </p>
+                  <button className="bg-[#003B65] text-white px-5 py-1 mb-10">
+                     Create
+                  </button>
+               </div>
+            )}
+
+            <SideBarButton
+               isSideNav={isSideNav}
+               word={"Exit"}
+               icon={<BiExit />}
+            />
+         </div>
+      </div>
+   );
+};
+
+export default Sidebar;
