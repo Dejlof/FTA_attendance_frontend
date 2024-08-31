@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from "../components/Sidebar";
-import AttendanceList from "../components/AttendanceList";
+import AttendanceList from './AttendanceList';
 
 const AttendanceListPage = () => {
 
