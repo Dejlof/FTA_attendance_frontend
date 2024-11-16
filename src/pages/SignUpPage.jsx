@@ -20,7 +20,8 @@ const SignUpPage = () => {
     showConfirmPasswordContent(!showConfirmPassword);
   };
 
-  const [fullName, setFullName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -44,32 +45,32 @@ const SignUpPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (!fullName || !password || !confirmPassword) {
+    if (!userName || !password || !email) {
       setErrorMessage("Please complete all input fields!");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
       return;
-    } else if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      setErrorMessage("Invalid email address!");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
     } else {
       setLoading(true);
       apiCall("post", `${SignUp_URL}`, {
-        fullName: fullName,
+        userName: userName,
         password: password,
-        confirmPassword: confirmPassword,
+        email: email,
       })
         .then((response) => {
           if (response) {
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 201) {
               toast.success("User account created successfully!");
               navigate("/login");
             }
           } else {
-            setErrorMessage(response.message || "Signup request failed!");
+            setErrorMessage(response.data || "Signup request failed!");
             setTimeout(() => {
               setErrorMessage("");
             }, 3000);
@@ -78,7 +79,7 @@ const SignUpPage = () => {
         .catch((err) => {
           Logger.error(err);
           setErrorMessage(
-            err.message || "An error occurred while processing your request."
+            err.title || "An error occurred while processing your request."
           );
           setTimeout(() => {
             setErrorMessage("");
@@ -105,17 +106,33 @@ const SignUpPage = () => {
             <p className="py-1">Welcome! Please fill in your credentials.</p>
 
             <form className="py-4" onSubmit={handleSubmit}>
-              <label>
-                Full Name
-                <br></br>
-                <input
-                  className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
-                  placeholder="Enter your login ID"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-              </label>
+              <section>
+                <label>
+                  Email
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your email address"
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+              </section>
+              <br></br>
+              <section>
+                <label>
+                  Username
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your username"
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                  />
+                </label>
+              </section>
               <br></br>
               <section className="relative">
                 <label>
@@ -123,7 +140,7 @@ const SignUpPage = () => {
                   <br></br>
                   <input
                     className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
-                    placeholder="Password"
+                    placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -131,26 +148,6 @@ const SignUpPage = () => {
                   <span
                     className="absolute mt-5 md:mt-6 right-6 md:right-8"
                     onClick={togglePassword}
-                  >
-                    {showPassword ? eye : eyeSlash}
-                  </span>
-                </label>
-              </section>
-              <br></br>
-              <section className="relative">
-                <label>
-                  Confirm Password
-                  <br></br>
-                  <input
-                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    type={showConfirmPassword ? "text" : "password"}
-                    onChange={(event) => setConfirmPassword(event.target.value)}
-                  />
-                  <span
-                    className="absolute mt-5 md:mt-6 right-6 md:right-8"
-                    onClick={confirmTogglePassword}
                   >
                     {showPassword ? eye : eyeSlash}
                   </span>

@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const [isCheckBox, setCheckBox] = React.useState(false);
+  const [isCheckBox, setCheckBox] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
   const [loginID, setLoginID] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -68,27 +68,29 @@ const LoginPage = () => {
     }
     setLoading(true);
     apiCall("post", `${Login_URL}`, {
-      loginID: loginID,
+      userName: loginID,
       password: password,
     })
       .then((response) => {
-        console.log(response);
         if (response) {
           if (response.status === 200) {
             toast.success("Login successful!");
+            sessionStorage.setItem("authToken", response.data.token);
+            sessionStorage.setItem("userEmail", response.data.email);
+            sessionStorage.setItem("userId", response.data.$id);
             navigate("/");
           }
         } else {
-          setErrorMessage(response.message || "Login failed!");
+          setErrorMessage(response.data || "Login failed!");
           setTimeout(() => {
-              setErrorMessage("");
+            setErrorMessage("");
           }, 3000);
         }
       })
       .catch((err) => {
-          Logger.error(err);
+        Logger.error(err);
         setErrorMessage(
-          err.message || "An error occurred while processing your request."
+          err.title || "An error occurred while processing your request."
         );
         setTimeout(() => {
           setErrorMessage("");
@@ -115,7 +117,7 @@ const LoginPage = () => {
 
             <form className="py-4 gap-2" onSubmit={handleSubmit}>
               <label>
-                Login ID
+                Username
                 <br></br>
                 <input
                   className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
