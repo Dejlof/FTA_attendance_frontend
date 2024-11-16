@@ -3,10 +3,11 @@ import FirstBankLogo from "../assets/images/FirstBankLogo.jpg";
 import { BiExit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import PinInput from "../components/PinInput";
-import { ResetPwd_URL } from "../utils/AllURLs";
+import { FgtPwd_URL, ResetPwd_URL } from "../utils/AllURLs";
 import { Logger } from "../utils/logger";
 import LoadingPage from "./LoadingPage";
 import { apiCall } from "../utils/apiClient";
+import toast from "react-hot-toast";
 
 const PasswordReset = () => {
   const [completePin, setCompletePin] = useState("");
@@ -29,23 +30,26 @@ const PasswordReset = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (completePin.length < 5) {
-      setErrorMessage("Pin should be at least 5 digits!");
+    if (completePin.length < 6) {
+      setErrorMessage("Pin should be at least 6 digits!");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
       return;
     } else {
+      let email = sessionStorage.getItem("userEmail") || "";
       setLoading(true);
       apiCall("post", `${ResetPwd_URL}`, {
-        completePin: completePin,
+        email: email,
+        code: completePin,
       })
         .then((response) => {
           if (response) {
             if (response.status === 200) {
               toast.success("Password reset successfully!");
-              navigate("/login");
+              navigate("/setNewPassword");
             } else {
+              setCompletePin("");
               setErrorMessage(
                 response.data || "Password reset request failed!"
               );
@@ -54,9 +58,8 @@ const PasswordReset = () => {
               }, 3000);
             }
           } else {
-            setErrorMessage(
-              response.message || "Password reset request failed!"
-            );
+            setCompletePin("");
+            setErrorMessage(response.data || "Password reset request failed!");
             setTimeout(() => {
               setErrorMessage("");
             }, 3000);
@@ -64,8 +67,9 @@ const PasswordReset = () => {
         })
         .catch((err) => {
           Logger.error(err);
+          setCompletePin("");
           setErrorMessage(
-            err.message || "An error occurred while processing your request."
+            err.title || "An error occurred while processing your request."
           );
           setTimeout(() => {
             setErrorMessage("");
@@ -73,6 +77,36 @@ const PasswordReset = () => {
         })
         .finally(() => setLoading(false));
     }
+  };
+
+  const resendRequest = async () => {
+    let email = sessionStorage.getItem("userEmail") || '';
+    setLoading(true);
+    apiCall("post", `${FgtPwd_URL}`, {
+      email: email,
+    })
+      .then((response) => {
+        if (response) {
+          if (response.status === 200) {
+            toast.success(response.data || "Request sent successfully!");
+          }
+        } else {
+          setErrorMessage(response.data || "Request failed!");
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 3000);
+        }
+      })
+      .catch((err) => {
+        Logger.error(err);
+        setErrorMessage(
+          err.title || "An error occurred while processing your request."
+        );
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -93,7 +127,7 @@ const PasswordReset = () => {
 
             <section className="flex py-8">
               <PinInput
-                length={5}
+                length={6}
                 onChange={handlePinChange}
                 // onComplete={Logger.info(completePin)}
               />
@@ -110,7 +144,7 @@ const PasswordReset = () => {
 
             <aside className="py-3 md:py-4">
               Didn&apos;t receive any mail?{" "}
-              <span className="underline text-[#d7bd14]">Click to resend</span>
+              <span className="underline text-[#d7bd14]" onClick={resendRequest}>Click to resend</span>
             </aside>
 
             <aside className="flex flex-row gap-1 font-medium">

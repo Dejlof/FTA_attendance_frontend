@@ -1,10 +1,9 @@
-export const Login_URL = '/login';
+export const Login_URL = '/Account/login';
 
-export const FgtPwd_URL = '/forgotPassword';
+export const SignUp_URL = '/Account/register';
 
-export const SignUp_URL = '/signup';
+export const FgtPwd_URL = '/Account/forgot-password';
 
-export const NewPassword_URL = '/passwordReset';
+export const NewPassword_URL = '/Account/reset-password';
 
-export const ResetPwd_URL = '/resetPassword';
-
+export const ResetPwd_URL = '/Account/verify-code';
