@@ -5,7 +5,7 @@ import ListData from "../components/ListData";
 
 const AttendanceList = () => {
    return (
-      <div className="basis-4/5 mr-8 py-10">
+      <div className="basis-4/5 mx-6 py-10">
          <SearchHeader />
          <AttendancePeriod />
          <ListData />
