@@ -61,7 +61,7 @@ const ForgotPassword = () => {
         .catch((err) => {
           Logger.error(err);
           setErrorMessage(
-            err.title || "An error occurred while processing your request."
+            err.title || err || "An error occurred while processing your request."
           );
           setTimeout(() => {
             setErrorMessage("");
