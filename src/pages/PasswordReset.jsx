@@ -69,7 +69,7 @@ const PasswordReset = () => {
           Logger.error(err);
           setCompletePin("");
           setErrorMessage(
-            err.title || "An error occurred while processing your request."
+            err.title || err || "An error occurred while processing your request."
           );
           setTimeout(() => {
             setErrorMessage("");
