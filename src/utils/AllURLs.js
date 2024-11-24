@@ -7,3 +7,5 @@ export const FgtPwd_URL = '/Account/forgot-password';
 export const NewPassword_URL = '/Account/reset-password';
 
 export const ResetPwd_URL = '/Account/verify-code';
+
+export const AttenRecord_URL = '/AttendanceRecord';

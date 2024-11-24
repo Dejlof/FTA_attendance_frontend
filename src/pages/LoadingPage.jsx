@@ -3,7 +3,10 @@ import FirstBankLogo from "../assets/images/FBNLogo.jpg";
 
 const LoadingPage = () => {
   return (
-    <div className="flex h-full w-full bg-[#033b63] justify-center items-center">
+    <div
+      className="fixed inset-0 bg-[#033b63] flex justify-center items-center z-50"
+      style={{ height: "100vh", width: "100vw" }}
+    >
       <aside className="relative">
         <div className="border-4 border-yellow-500 border-t-4 border-t-blue-800 bg-white rounded-full w-16 lg:w-[4.5rem] h-16 lg:h-[4.5rem] animate-spin"></div>
         <img
