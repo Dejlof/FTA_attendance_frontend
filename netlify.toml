@@ -1,8 +1,4 @@
 
-[build]
-  publish = "build"    
-  command = "npm run build"  
-
 # Redirects Configuration
 [[redirects]]
   from = "/api/*"
