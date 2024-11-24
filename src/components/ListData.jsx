@@ -10,7 +10,8 @@ const ListData = ({ setIsLoading, setError, searchQuery }) => {
     const fetchAttendanceRecords = async () => {
       setIsLoading(true); 
       try {
-        const response = await axios.get(AttendRecord_URL, {
+        const response = await axios.get(AttendRecord_URL, { 
+          withCredentials: true, 
           headers: {
             Authorization: `Bearer ${sessionToken}`,
           },
