@@ -4,7 +4,7 @@ import axios from "axios";
 const ListData = ({ setIsLoading, setError, searchQuery }) => {
   const [attendanceData, setAttendanceData] = useState([]);
   const sessionToken = sessionStorage.getItem("authToken");
-  const AttendRecord_URL = "https://attendanceappadminportal.onrender.com/api/AttendanceRecord";
+  const AttendRecord_URL = "/api/AttendanceRecord";
 
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
