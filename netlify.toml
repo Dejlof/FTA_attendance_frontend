@@ -1,0 +1,13 @@
+
+[build]
+  publish = "build"    
+  command = "npm run dev"  
+
+# Redirects Configuration
+[[redirects]]
+  from = "/api/*"
+  to = "https://attendanceappadminportal.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+
