@@ -69,7 +69,7 @@ function App() {
           maxDate={new Date(2200, 12, 22)} // To set maximum date
           showWeekNumbers={true} // TO show week numbers
           showNeighboringMonth={true}
-          calendarType="US" // Changing the calender type
+          calendarType="gregory" // Changing the calender type
           tileDisabled={({ date }) => date.getDay() === 0} // Disabaling the sunday
         />
       </div>
