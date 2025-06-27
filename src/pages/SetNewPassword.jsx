@@ -58,6 +58,7 @@ const SetNewPassword = () => {
       return;
     } else if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match!");
+      toast.info("Please ensure both passwords match.");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
@@ -72,16 +73,19 @@ const SetNewPassword = () => {
           console.log(response);
           if (response) {
             if (response.status === 200) {
-              toast.success("User account created successfully!");
+              toast.success("Password changed successfully!");
               navigate("/login");
             } else {
-              setErrorMessage(response.data || "Signup request failed!");
+              if(err.response?.status === 401) {
+                navigate("/login");
+               }
+              setErrorMessage(response.data || "Password Reset failed!");
               setTimeout(() => {
                 setErrorMessage("");
               }, 3000);
             }
           } else {
-            setErrorMessage(response.data || "Signup request failed!");
+            setErrorMessage(response.data || "Password Reset failed!");
             setTimeout(() => {
               setErrorMessage("");
             }, 3000);

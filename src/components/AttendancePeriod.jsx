@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import PeriodBox from "./PeriodBox";
 import { FaArrowRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; 
+import "react-datepicker/dist/react-datepicker.css";
 
-const AttendancePeriod = ({ setSearchQuery }) => {
-  const [startDate, setStartDate] = useState(new Date()); 
-  const [endDate, setEndDate] = useState(new Date()); 
-  const navigate = useNavigate();
+const AttendancePeriod = ({
+  setSearchQuery,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  handleSubmit,
+}) => {
+
 
   const handleSelection = (event) => {
     const selectedValue = event.target.value;
-    if (selectedValue === "login") {
-      navigate("/login");
-    } else if (selectedValue === "signin") {
-      navigate("/signin");
+    if (selectedValue === "csv") {
+      handleSubmit('csv');
+    } else if (selectedValue === "pdf") {
+      handleSubmit('pdf');
     }
   };
 
@@ -26,23 +31,23 @@ const AttendancePeriod = ({ setSearchQuery }) => {
         <PeriodBox>
           <DatePicker
             selected={startDate}
-            onChange={(date) => setStartDate(date)} 
-            dateFormat="MMM d, yyyy" 
-            showMonthDropdown 
-            showYearDropdown 
-            dropdownMode="select" // Enables dropdowns for month and year
-            className="outline-none text-center w-full bg-transparent" 
+            onChange={(date) => setStartDate(date)}
+            dateFormat="MMM d, yyyy"
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            className="outline-none text-center w-full bg-transparent"
           />
         </PeriodBox>
         <FaArrowRight className="hidden lg:inline-block text-[#b8b8b8] mt-1 mx-3" />
         <PeriodBox>
           <DatePicker
             selected={endDate}
-            onChange={(date) => setEndDate(date)} 
-            dateFormat="MMM d, yyyy" 
-            showMonthDropdown 
-            showYearDropdown 
-            dropdownMode="select" // Enables dropdowns for month and year
+            onChange={(date) => setEndDate(date)}
+            dateFormat="MMM d, yyyy"
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
             className="outline-none text-center w-full bg-transparent"
           />
         </PeriodBox>
@@ -65,8 +70,8 @@ const AttendancePeriod = ({ setSearchQuery }) => {
             onChange={handleSelection}
           >
             <option value="">Select</option>
-            <option value="login">Login</option>
-            <option value="signin">Sign up</option>
+            <option value="csv">csv</option>
+            <option value="pdf">pdf</option>
           </select>
         </PeriodBox>
       </div>

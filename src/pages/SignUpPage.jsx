@@ -3,10 +3,11 @@ import FirstBankLogo from "../assets/images/FirstBankLogo.jpg";
 import { BiExit } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { SignUp_URL } from "../utils/AllURLs";
-import toast from "react-hot-toast";
 import LoadingPage from "./LoadingPage";
 import { apiCall } from "../utils/apiClient";
 import { Logger } from "../utils/logger";
+import { toast } from 'react-toastify'
+
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ const SignUpPage = () => {
 
   const [email, setEmail] = React.useState("");
   const [userName, setUserName] = React.useState("");
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -44,7 +48,23 @@ const SignUpPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setErrorMessage("");
+
+    if (password !== confirmPassword) {
+      toast.info("Passwords do not match!");
+      return;
+    }
+  
+    const validatePassword = (password) => {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+      return passwordRegex.test(password);
+    };
+    if (password && !validatePassword(password.trim())) {
+      toast.info("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.");
+      return;
+    }
+    
     if (!userName || !password || !email) {
       setErrorMessage("Please complete all input fields!");
       setTimeout(() => {
@@ -59,17 +79,30 @@ const SignUpPage = () => {
     } else {
       setLoading(true);
       apiCall("post", `${SignUp_URL}`, {
-        userName: userName,
-        password: password,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
+        userName: userName,
+        phoneNumber: phoneNumber, 
+        password: password,
       })
         .then((response) => {
           if (response) {
             if (response.status === 200 || response.status === 201) {
               toast.success("User account created successfully!");
+              console.log("User account created successfully:", response.data);
               navigate("/login");
+              setFirstName("");
+              setLastName("");
+              setEmail("");
+              setUserName("");
+              setPhoneNumber("");
+              setPassword("");
+              setConfirmPassword("");
             }
           } else {
+            toast.error("Signup failed!");
+            Logger.error("Signup failed:", response.data);
             setErrorMessage(response.data || "Signup request failed!");
             setTimeout(() => {
               setErrorMessage("");
@@ -106,16 +139,47 @@ const SignUpPage = () => {
             <p className="py-1">Welcome! Please fill in your credentials.</p>
 
             <form className="py-4" onSubmit={handleSubmit}>
+            <section>
+                <label>
+                  First Name
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your first name"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required = {true}
+                  />
+                </label>
+              </section>
+              <br></br>
+              <section>
+                <label>
+                  Last Name
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your first name"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required = {true}
+                  />
+                </label>
+              </section>
+              <br></br>
               <section>
                 <label>
                   Email
                   <br></br>
                   <input
-                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
                     placeholder="Enter your email address"
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required = {true}
                   />
                 </label>
               </section>
@@ -125,11 +189,27 @@ const SignUpPage = () => {
                   Username
                   <br></br>
                   <input
-                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
                     placeholder="Enter your username"
                     type="text"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
+                    required = {true}
+                  />
+                </label>
+              </section>
+              <br></br>
+              <section>
+                <label>
+                  Phone Number
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your phone number"
+                    type="phone"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required = {true}
                   />
                 </label>
               </section>
@@ -139,14 +219,15 @@ const SignUpPage = () => {
                   Password
                   <br></br>
                   <input
-                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required = {true}
                   />
                   <span
-                    className="absolute mt-5 md:mt-6 right-6 md:right-8"
+                    className="absolute  mt-3 md:mt-4 right-4 md:right-6"
                     onClick={togglePassword}
                   >
                     {showPassword ? eye : eyeSlash}
@@ -154,9 +235,30 @@ const SignUpPage = () => {
                 </label>
               </section>
               <br></br>
-              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+              <section className="relative">
+                <label>
+                 Confirm Password
+                  <br></br>
+                  <input
+                    className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-1 mt-1 mb-2 md:py-2 rounded-md font-extralight focus:outline-none focus:bg-white"
+                    placeholder="Enter your password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required = {true}
+                  />
+                  <span
+                    className="absolute mt-3 md:mt-4 right-4 md:right-6"
+                    onClick={confirmTogglePassword}
+                  >
+                    {showConfirmPassword ? eye : eyeSlash}
+                  </span>
+                </label>
+              </section>
+              <br></br>
+          
               <button
-                className="bg-[#d7bd14] px-28 py-3 mt-6 md:px-40 md:py-4 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative"
+                className="bg-[#d7bd14] px-28 py-2 mt-6 md:px-40 md:py-3 rounded-2xl hover:bg-white hover:border hover:border-[#d7bd14] relative"
                 type="submit"
               >
                 Sign Up

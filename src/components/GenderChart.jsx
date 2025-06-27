@@ -1,46 +1,53 @@
+import React, { useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
-import React, { useEffect, useState } from "react";
 
-const GenderChart = () => {
-  const [populationData, setPopulationData] = useState([89, 123]);
-
-  let chartInstance = null;
+const GenderChart = ({ maleCount, femaleCount }) => {
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
 
   useEffect(() => {
-    const ctx = document.getElementById("genderChart");
-    chartInstance = new Chart(ctx, {
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy(); // cleanup previous chart
+    }
+
+    const ctx = chartRef.current.getContext("2d");
+
+    chartInstanceRef.current = new Chart(ctx, {
       type: "pie",
       data: {
-        labels: ["male", "female"],
+        labels: ["Male", "Female"],
         datasets: [
           {
-            label: "population",
-            data: populationData.map((data) => data),
+            label: "Population",
+            data: [maleCount, femaleCount],
             backgroundColor: ["#003B65", "#FFB200"],
             hoverOffset: 4,
           },
         ],
       },
       options: {
-        aspectRatio: 1,
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
+        },
       },
     });
 
     return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
+      chartInstanceRef.current.destroy();
     };
-  }, []);
+  }, [maleCount, femaleCount]);
+
   return (
-    <>
-    
-      <p className="font-mono inline-block mr-12 mt-2 bg-[#003B65] text-white p-1">Male:{populationData[0]}</p>
-      <p className="font-mono inline-block mt-2 bg-[#FFB200] text-white p-1 ">Female:{populationData[1]}</p>
-      <div>
-        <canvas id="genderChart"></canvas>
+    <div className="mt-6">
+      <div className="mb-4 space-x-4">
+        <span className="font-mono bg-[#003B65] text-white p-1 rounded">Male: {maleCount}</span>
+        <span className="font-mono bg-[#FFB200] text-white p-1 rounded">Female: {femaleCount}</span>
       </div>
-    </>
+      <canvas ref={chartRef} id="genderChart" width={100} height={100}></canvas>
+    </div>
   );
 };
 

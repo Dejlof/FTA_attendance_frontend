@@ -9,6 +9,8 @@ const SignUpPage = lazy(() => import(`./pages/SignUpPage`));
 const ForgotPassword = lazy(() => import(`./pages/ForgotPassword`));
 const SetNewPassword = lazy(() => import(`./pages/SetNewPassword`));
 const PasswordReset = lazy(() => import(`./pages/PasswordReset`));
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -20,8 +22,9 @@ function App() {
       <div className="flex-1">
         <Suspense fallback={<LoadingPage />}>
           <Routes>
-            <Route path="/" element={<Overview />} />
+            <Route path="/" element={<LoginPage />} />
             <Route path="/delegates" element={<AttendanceList />} />
+            <Route path="/overview" element={<Overview />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signin" element={<SignUpPage />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
@@ -29,6 +32,7 @@ function App() {
             <Route path="/passwordReset" element={<PasswordReset />} />
           </Routes>
         </Suspense>
+        <ToastContainer />
       </div>
     </div>
   );

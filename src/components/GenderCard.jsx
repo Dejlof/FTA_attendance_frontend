@@ -3,7 +3,7 @@ import CardsIcon from "./CardsIcon";
 import cardIcon from "../assets/images/Card-icon.jpg";
 import GenderChart from "./GenderChart";
 
-const GenderCard = () => {
+const GenderCard = ({maleCount, femaleCount}) => {
   return (
     <div className="flex-[.5] p-6   bg-white  rounded ">
       <div className="flex items-center justify-between">
@@ -12,7 +12,10 @@ const GenderCard = () => {
           <img src={cardIcon} alt="" />
         </CardsIcon>
       </div>
-      <GenderChart />
+      <GenderChart 
+       maleCount = {maleCount}
+       femaleCount = {femaleCount}
+      />
     </div>
   );
 };

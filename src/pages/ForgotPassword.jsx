@@ -6,7 +6,7 @@ import { FgtPwd_URL } from "../utils/AllURLs";
 import LoadingPage from "./LoadingPage";
 import { apiCall } from "../utils/apiClient";
 import { Logger } from "../utils/logger";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify'
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -48,10 +48,15 @@ const ForgotPassword = () => {
           if (response) {
             if (response.status === 200) {
               toast.success(response.data || "Request sent successfully!");
+              console.log(response.data);
               sessionStorage.setItem("userEmail", email);
               navigate("/passwordReset");
             }
           } else {
+            if(err.response?.status === 401) {
+              navigate("/login");
+             }
+            toast.error("Request failed!");
             setErrorMessage(response.data || "Request failed!");
             setTimeout(() => {
               setErrorMessage("");
@@ -99,6 +104,7 @@ const ForgotPassword = () => {
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required={true}
                 />
               </label>
               <br></br>

@@ -48,7 +48,11 @@ const PasswordReset = () => {
             if (response.status === 200) {
               toast.success("Password reset successfully!");
               navigate("/setNewPassword");
+              
             } else {
+              if(err.response?.status === 401) {
+                navigate("/login");
+               }
               setCompletePin("");
               setErrorMessage(
                 response.data || "Password reset request failed!"

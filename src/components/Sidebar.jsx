@@ -54,7 +54,7 @@ const Sidebar = () => {
                      title="open sidebar"
                   />
                )}
-               <NavLink to="">
+               <NavLink to="overview">
                   <SideBarButton
                      isSideNav={isSideNav}
                      word={"Overview"}

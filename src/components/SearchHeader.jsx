@@ -3,9 +3,19 @@ import "font-awesome/css/font-awesome.min.css";
 import HeaderIcon from "./HeaderIcon";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
 import user from "../assets/images/user.png";
 
 const SearchHeader = ({ setSearchQuery }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("authToken"); // remove auth token
+    navigate("/login"); // redirect to login
+  };
+
+
   const currentDate = new Date();
 
   const options = {
@@ -41,7 +51,9 @@ const SearchHeader = ({ setSearchQuery }) => {
           <AiOutlineMessage />
         </HeaderIcon>
         <HeaderIcon p="p-2.5 hidden lg:inline-block">
-          <IoIosNotificationsOutline />
+          <button onClick={handleLogout} className="text-gray-500 hover:text-gray-700">
+            <FiLogOut/>
+          </button>
         </HeaderIcon>
         <HeaderIcon>
           <img src={user} alt="" className="w-full" />

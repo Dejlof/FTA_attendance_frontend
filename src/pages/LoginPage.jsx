@@ -6,7 +6,7 @@ import { Login_URL } from "../utils/AllURLs";
 import { apiCall } from "../utils/apiClient";
 import { Logger } from "../utils/logger";
 import LoadingPage from "./LoadingPage";
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify'
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -59,13 +59,7 @@ const LoginPage = () => {
     event.preventDefault();
     setErrorMessage("");
 
-    if (!loginID || !password) {
-      setErrorMessage("Login ID and Password are required!");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000);
-      return;
-    }
+    
     setLoading(true);
     apiCall("post", `${Login_URL}`, {
       userName: loginID,
@@ -74,13 +68,17 @@ const LoginPage = () => {
       .then((response) => {
         if (response) {
           if (response.status === 200) {
-            toast.success("Login successful!");
+
             sessionStorage.setItem("authToken", response.data.token);
             sessionStorage.setItem("userEmail", response.data.email);
             sessionStorage.setItem("userId", response.data.$id);
-            navigate("/");
+            navigate("/overview");
+            setLoginID("");
+            setPassword("");
           }
-        } else {
+        } 
+        else {
+          toast.error("Login failed!");
           setErrorMessage(response.data || "Login failed!");
           setTimeout(() => {
             setErrorMessage("");
@@ -117,7 +115,7 @@ const LoginPage = () => {
 
             <form className="py-4 gap-2" onSubmit={handleSubmit}>
               <label>
-                Username
+               Email
                 <br></br>
                 <input
                   className="border border-gray-200 bg-gray-100 pl-5 w-72 md:w-96 md:pl-5 py-3 mt-1 mb-2 md:py-4 rounded-md font-extralight focus:outline-none focus:bg-white"
@@ -125,6 +123,8 @@ const LoginPage = () => {
                   type="text"
                   value={loginID}
                   onChange={(e) => setLoginID(e.target.value)}
+                  required = {true}
+
                 />
               </label>
               <br></br>
@@ -138,6 +138,7 @@ const LoginPage = () => {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required = {true}
                   />
                   <span
                     className="absolute mt-5 md:mt-6 right-4 md:right-8"
@@ -171,9 +172,9 @@ const LoginPage = () => {
                 Log In
               </button>
             </form>
-
+            <p>Don't have an account? <span onClick={() => navigate("/signin")}  > Sign Up</span></p>
             <span className="absolute p-2 bg-gray-100 rounded-md bottom-8 right-20">
-              {<BiExit onClick={() => navigate("/")} />}
+              {<BiExit onClick={() => navigate("/delegates")} />}
             </span>
           </div>
         </article>

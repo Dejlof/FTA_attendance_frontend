@@ -1,33 +1,53 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { AttenRecord_URL } from "../utils/AllURLs";
+import { useNavigate } from "react-router-dom";
 
-const ListData = ({ setIsLoading, setError, searchQuery }) => {
+const ListData = ({ setIsLoading, setError, searchQuery,startDate, endDate, pageNumber, pageSize, setTotalCount}) => {
   const [attendanceData, setAttendanceData] = useState([]);
   const sessionToken = sessionStorage.getItem("authToken");
-  const AttendRecord_URL = "https://attendanceappadminportal.onrender.com/api/AttendanceRecord";
+
+
+ 
+ 
+ const navigate = useNavigate();
+
+
+
 
   useEffect(() => {
     const fetchAttendanceRecords = async () => {
       setIsLoading(true); 
       try {
-        const response = await axios.get(AttendRecord_URL, { 
+        const formattedStart = startDate.toISOString().split("T")[0]; // yyyy-MM-dd
+        const formattedEnd = endDate.toISOString().split("T")[0];
+        const response = await axios.get(`${AttenRecord_URL}?startDate=${formattedStart}&endDate=${formattedEnd}&pageNumber=${pageNumber}&pageSize=${pageSize}`, { 
           withCredentials: true, 
           headers: {
             Authorization: `Bearer ${sessionToken}`,
           },
         });
-        setAttendanceData(response.data.$values || []);
+        console.log(formattedStart,formattedEnd)
+        setAttendanceData(response.data.items.$values || []);
+        setTotalCount(response.data.totalCount);
         setError(null); 
       } catch (err) {
-        setError('Error Fetching Attendace Data. Try Again');
-        console.error("Error fetching attendance records:", err);
+        const status = err.response?.status;
+     if (status === 401) {
+      navigate("/login"); // Unauthorized: token expired or not logged in
+     } else if (status === 403) {
+       setError("You do not have permission to view this data."); // Forbidden
+     } else {
+    setError("Error Fetching Attendance Data. Try Again");
+      }
+   console.error("Error fetching attendance records:", err);
       } finally {
         setIsLoading(false); // Stop loading
       }
     };
 
     fetchAttendanceRecords();
-  }, [sessionToken, setIsLoading, setError]);
+  }, [sessionToken, setIsLoading, setError, startDate, endDate, pageNumber, pageSize]);
 
   const renderStatus = (status) => {
     let statusText = "Unknown";
@@ -39,12 +59,12 @@ const ListData = ({ setIsLoading, setError, searchQuery }) => {
         statusColor = "bg-green-500"; 
         break;
       case 1:
-        statusText = "Absent";
-        statusColor = "bg-red-500"; 
-        break;
-      case 2:
         statusText = "Late";
         statusColor = "bg-yellow-500"; 
+        break;
+      case 2:
+        statusText = "Absent";
+        statusColor = "bg-red-500"; 
         break;
       default:
         break;
@@ -67,9 +87,8 @@ const ListData = ({ setIsLoading, setError, searchQuery }) => {
               <th>Staff ID</th>
               <th>Date</th>
               <th>Status</th>
-              <th>Location</th>
+              <th>Department</th>
               <th>Check-In Time</th>
-              <th>Check-Out Time</th>
             </tr>
           </thead>
           <tbody className="p-3">
@@ -80,20 +99,23 @@ const ListData = ({ setIsLoading, setError, searchQuery }) => {
               >
                 <td>{data.candidateName}</td>
                 <td>{data.candidateEmail}</td>
-                <td>{data.candidateStaffId}</td>
-                <td>{new Date(data.date).toLocaleString()}</td>
+                <td>{data.staffId}</td>
+                <td>{new Date(data.date).toLocaleDateString(undefined, {
+                   year: 'numeric',
+                   month: 'short',
+                  day: 'numeric',
+                  })}</td>
                 <td>{renderStatus(data.status)}</td>
-                <td>{data.location}</td>
+                <td>{data.department}</td>
                 <td>
                   {data.checkInTime
-                    ? new Date(data.checkInTime).toLocaleString()
+                    ? new Date(data.date).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
                     : "N/A"}
                 </td>
-                <td>
-                  {data.checkOutTime
-                    ? new Date(data.checkOutTime).toLocaleString()
-                    : "N/A"}
-                </td>
+               
               </tr>
             ))}
           </tbody>

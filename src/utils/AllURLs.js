@@ -1,11 +1,19 @@
-export const Login_URL = '/Account/login';
+import { BASE_URL } from "./api";
 
-export const SignUp_URL = '/Account/register';
+export const Login_URL = `${BASE_URL}/AdminAuth/login`;
 
-export const FgtPwd_URL = '/Account/forgot-password';
+export const SignUp_URL = `${BASE_URL}/AdminAuth/register`;
 
-export const NewPassword_URL = '/Account/reset-password';
+export const FgtPwd_URL = `${BASE_URL}/AdminAuth/forgot-password`;
 
-export const ResetPwd_URL = '/Account/verify-code';
+export const NewPassword_URL = `${BASE_URL}/AdminAuth/reset-password`;
 
-export const AttenRecord_URL = '/AttendanceRecord';
+export const ResetPwd_URL = `${BASE_URL}/AdminAuth/verify-code`;
+
+export const AttenRecord_URL = `${BASE_URL}/attendance-records/filter/date-range`;
+
+export const downloadRecord_URL = `${BASE_URL}/AttendanceReport/generate`;
+
+export const candidates = `${BASE_URL}/Candidates`;
+
+export const CurrentUser = `${BASE_URL}/AdminAuth/currentUser`;
